@@ -6,5 +6,6 @@ target 'ImageView' do
   use_frameworks!
 
   # Pods for ImageView
-
+  pod 'SwiftyJSON', '~> 4.0'
+  pod 'Alamofire'
 end

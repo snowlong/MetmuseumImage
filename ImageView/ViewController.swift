@@ -7,6 +7,9 @@
 //
 
 import UIKit
+//import Foundation
+import SwiftyJSON
+import Alamofire
 
 class ViewController: UIViewController {
 
@@ -14,11 +17,27 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let myImage:UIImage = getImageByUrl(url:"https://rr.img.naver.jp/mig?src=http%3A%2F%2Fimgcc.naver.jp%2Fkaze%2Fmission%2FUSER%2F20140315%2F40%2F4254050%2F12%2F384x215xbeefc5a0630dd93608c286cb.jpg%2F300%2F600&twidth=300&theight=600&qlt=80&res_format=jpg&op=r")
-        
-        Image.image = myImage
-        
-        self.view.addSubview(Image)
+
+        var requestURLString = "https://collectionapi.metmuseum.org/public/collection/v1/objects/"
+        let objectID = "436535"
+        requestURLString += objectID
+        Alamofire
+            .request(requestURLString)
+            .responseJSON { response in
+                guard let artworkData = response.result.value else {
+                    return
+                }
+                let artJson = JSON(artworkData)
+                
+                print(artJson["primaryImageSmall"])
+                
+                let artImage = self.getImageByUrl(url: artJson["primaryImageSmall"].string!)
+                self.Image.image = artImage
+                self.view.addSubview(self.Image)
+
+                
+            }
+//        let artworkData =
 
     }
     
@@ -34,4 +53,59 @@ class ViewController: UIViewController {
     }
 
 }
+
+//struct artworkModel {
+//    let objectID: Int
+//    let isHighlight: Bool
+//    let accessionNumber: String
+//    let isPublicDomain: Bool
+//    let primaryImage: String
+//    let primaryImageSmall: String
+//    let additionalImages: [String]
+//    let constituents: [String]
+//    let department: String
+//    let objectName: String
+//    let title: String
+//    let culture: String
+//    let period: String
+//    let dynasty: String
+//    let portfolio: String
+//    let artistRole: String
+//    let artistPrefix: String
+//    let artistDisplayName: String
+//    let artistDisplayBio: String
+//    let artistSuffix: String
+//    let artistAlphaSort: String
+//    let artistNationality: String
+//    let artistBeginDate: String
+//    let artistEndDate: String
+//    let objectDate: String
+//    let objectBeginDate: String
+//    let objectEndDate: String
+//    let medium: String
+//    let dimensions: String
+//    let creditLine: String
+//    let geographyType: String
+//    let city: String
+//    let state: String
+//    let county: String
+//    let country: String
+//    let region: String
+//    let subregion: String
+//    let locale: String
+//    let locus: String
+//    let excavation: String
+//    let river: String
+//    let classification: String
+//    let rightsAndReproduction: String
+//    let linkResource: String
+//    let metadataDate: String
+//    let repository: String
+//    let objectURL: String
+//    let tags: [String]
+//
+//    func encode(to encoder: Encoder) throws {
+//        var container = encoder.CodingKey(keyedBy: CodingKey.self)
+//    }
+//}
 
